@@ -64,7 +64,7 @@ class UpdateAuthors {
 
         println("Pushing...")
         val push = git.push()
-        push.remote = "git@github.com:JetBrains/ideavim.git"
+//        push.remote = "git@github.com:JetBrains/ideavim.git"
         push.setCredentialsProvider(UsernamePasswordCredentialsProvider(token, ""))
         push.call()
         println("Pushed")
