@@ -1,5 +1,6 @@
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.RepositoryBuilder
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
 import org.intellij.markdown.ast.getTextInNode
 import org.intellij.markdown.flavours.gfm.GFMFlavourDescriptor
 import org.intellij.markdown.parser.MarkdownParser
@@ -8,9 +9,10 @@ import java.io.File
 
 fun main(args: Array<String>) {
     val path = args[0]
+    val token = args[1]
     val repository = RepositoryBuilder().setGitDir(File("$path/.git")).build()
     val git = Git(repository)
-    val emails = git.log().call().take(10).mapTo(HashSet()) { it.authorIdent.emailAddress }
+    val emails = git.log().call().take(20).mapTo(HashSet()) { it.authorIdent.emailAddress }
 
     val gitHub = GitHub.connect()
     val searchUsers = gitHub.searchUsers()
@@ -37,11 +39,24 @@ fun main(args: Array<String>) {
     }
 
     val newAuthors = users.filterNot { it.mail in existingEmails }
+    if (newAuthors.isEmpty()) return
 
     val insertionString = newAuthors.toMdString()
     val resultingString = StringBuffer(authors).insert(contributorsSection.endOffset, insertionString).toString()
 
     authorsFile.writeText(resultingString)
+
+    git.add().addFilepattern(".").call()
+    val allNewAuthors = newAuthors.joinToString(", ") { it.name }
+
+    val commit = git.commit()
+    commit.setSign(false)
+    commit.setMessage("Add $allNewAuthors to contributors list").call()
+
+    val push = git.push()
+    push.remote = "https://github.com/JetBrains/ideavim"
+    push.setCredentialsProvider(UsernamePasswordCredentialsProvider(token, ""))
+    push.call()
 }
 
 fun List<Author>.toMdString(): String {
