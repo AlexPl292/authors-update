@@ -6,11 +6,11 @@ import org.intellij.markdown.parser.MarkdownParser
 import org.kohsuke.github.GitHub
 import java.io.File
 
-fun main() {
-    val repository = RepositoryBuilder().setGitDir(File("/Users/alex.plate/Develop/Work/ideavim/.git")).build()
+fun main(args: Array<String>) {
+    val path = args[0]
+    val repository = RepositoryBuilder().setGitDir(File("$path/.git")).build()
     val git = Git(repository)
-//    val emails = git.log().call().take(10).mapTo(HashSet()) { it.authorIdent.emailAddress }
-    val emails = setOf("daya0576@gmail.com")
+    val emails = git.log().call().take(10).mapTo(HashSet()) { it.authorIdent.emailAddress }
 
     val gitHub = GitHub.connect()
     val searchUsers = gitHub.searchUsers()
@@ -23,7 +23,7 @@ fun main() {
         users.add(Author(name, htmlUrl, email))
     }
 
-    val authorsFile = File("/Users/alex.plate/Develop/Work/ideavim/AUTHORS.md")
+    val authorsFile = File("$path/AUTHORS.md")
     val authors = authorsFile.readText()
     val parser = MarkdownParser(GFMFlavourDescriptor())
     val tree = parser.buildMarkdownTreeFromString(authors)
