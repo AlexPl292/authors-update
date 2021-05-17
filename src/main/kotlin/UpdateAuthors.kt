@@ -20,7 +20,9 @@ class UpdateAuthors {
         val users = mutableListOf<Author>()
         for (email in emails) {
             if (email == "aleksei.plate@jetbrains.com") continue
-            val user = searchUsers.q(email).list().single()
+            val githubUsers = searchUsers.q(email).list().toList()
+            if (githubUsers.isEmpty()) error("Cannot find user $email")
+            val user = githubUsers.single()
             val htmlUrl = user.htmlUrl.toString()
             val name = user.name
             users.add(Author(name, htmlUrl, email))
