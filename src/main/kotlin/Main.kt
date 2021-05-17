@@ -51,7 +51,9 @@ fun main(args: Array<String>) {
 
     val commit = git.commit()
     commit.setSign(false)
-    commit.setMessage("Add $allNewAuthors to contributors list").call()
+    commit.setAuthor("Alex Plate", "aleksei.plate@jetbrains.com")
+    commit.message = "Add $allNewAuthors to contributors list"
+    commit.call()
 
     val push = git.push()
     push.remote = "https://github.com/JetBrains/ideavim"
