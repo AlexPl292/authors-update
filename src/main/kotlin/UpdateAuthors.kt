@@ -10,7 +10,7 @@ import org.kohsuke.github.GitHub
 import java.io.File
 
 class UpdateAuthors {
-    fun update(path: String, token: String) {
+    fun update(path: String, token: String, uncheckedEmails: Set<String>) {
         val repository = RepositoryBuilder().setGitDir(File("$path/.git")).build()
         val git = Git(repository)
         val emails = git.log().call().take(20).mapTo(HashSet()) { it.authorIdent.emailAddress }
@@ -19,7 +19,7 @@ class UpdateAuthors {
         val searchUsers = gitHub.searchUsers()
         val users = mutableListOf<Author>()
         for (email in emails) {
-            if (email == "aleksei.plate@jetbrains.com") continue
+            if (email in uncheckedEmails) continue
             val githubUsers = searchUsers.q(email).list().toList()
             if (githubUsers.isEmpty()) error("Cannot find user $email")
             val user = githubUsers.single()
