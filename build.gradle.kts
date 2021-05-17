@@ -4,8 +4,8 @@ plugins {
     kotlin("jvm") version "1.4.32"
 }
 
-group = "me.user"
-version = "1.0-SNAPSHOT"
+group = "dev.feedforward.authorsupdate"
+version = "0.0.1"
 
 repositories {
     mavenCentral()

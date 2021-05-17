@@ -1,3 +1,5 @@
+package dev.feedforward.authorsupdate
+
 import org.eclipse.jgit.api.Git
 import org.eclipse.jgit.lib.RepositoryBuilder
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
