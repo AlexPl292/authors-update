@@ -54,16 +54,20 @@ class UpdateAuthors {
         git.add().addFilepattern(".").call()
         val allNewAuthors = newAuthors.joinToString(", ") { it.name }
 
+        println("Creating commit...")
         val commit = git.commit()
         commit.setSign(false)
         commit.setAuthor("Alex Plate", "aleksei.plate@jetbrains.com")
         commit.message = "Add $allNewAuthors to contributors list"
         commit.call()
+        println("Created")
 
+        println("Pushing...")
         val push = git.push()
-        push.remote = "https://github.com/JetBrains/ideavim"
+        push.remote = "git@github.com:JetBrains/ideavim.git"
         push.setCredentialsProvider(UsernamePasswordCredentialsProvider(token, ""))
         push.call()
+        println("Pushed")
     }
 }
 
