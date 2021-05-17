@@ -17,10 +17,13 @@ dependencies {
     implementation("org.eclipse.jgit:org.eclipse.jgit:5.11.1.202105131744-r")
     implementation("org.kohsuke:github-api:1.128")
     implementation("org.jetbrains:markdown:0.1.45")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
 }
 
 tasks.test {
-    useJUnit()
+    useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile>() {
